@@ -13,7 +13,7 @@ export default function CartItem({ name, price, count }: CartItemProps) {
         <span>{name}</span>
       </div>
       <div>
-        <span>{price}</span>/
+        <span>{price}</span>||
         <span className="font-bold">{count}</span>
       </div>
       {/* <button type="button" >
