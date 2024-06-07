@@ -23,12 +23,29 @@ export const getProductPageAPI = async (id: string) => {
   return response;
 };
 
+// export const getProductSearchAPI = async (value: string) => {
+//   const response = await notion.search({
+//     query: value,
+//     filter: {
+//       value: 'page',
+//       property: 'object'
+//     }
+//   });
+//   return response.results;
+// };
+
 export const getProductSearchAPI = async (value: string) => {
-  const response = await notion.search({
-    query: value,
+  const response = await notion.databases.query({
+    database_id: database_id,
     filter: {
-      value: 'page',
-      property: 'object'
+      or: [
+        {
+            property: "name",
+                title: {
+                    contains: value
+                }
+        }   
+    ]
     }
   });
   return response.results;

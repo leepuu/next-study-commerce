@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import Search from '@/app/_components/Search';
+import { ReactComponent as IconCart } from '@/app/_assets/icons/icon_cart.svg'
 
 export default function Header() {
   return (
@@ -15,11 +16,9 @@ export default function Header() {
           </Link>
         </h1>
         <nav className='flex gap-6'>
-          <Link href='/blog' className='text-sm transition hover:text-cyan-400'>
-            Blog
-          </Link>
-          <Link href='/cart' className='transition hover:text-cyan-400'>
-            장바구니
+          <Link href='/cart' className='text-slate-500 transition hover:text-indigo-500'>
+            <IconCart />
+            <span className="blind">장바구니</span>
           </Link>
           <Search />
         </nav>
