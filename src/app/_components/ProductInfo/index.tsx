@@ -4,12 +4,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import Button from '@/app/_components/Button';
 import useCartStore from '@/app/_store/store';
 
 import { getCartProductAPI } from '@/app/_api/product';
+import Amount from '../Amount';
 
 interface ProductInfoProps {
   id: string;
@@ -33,6 +34,12 @@ export default function ProductInfo({
   const addCartItem = useCartStore((state) => state.addCartItem)
   const fetchCartItems = useCartStore((state) => state.fetchCartItems)
   const router = useRouter();
+  const [amount, setAmount] = useState(1);
+
+  const handleAmountChange = (newAmount: number) => {
+    setAmount(newAmount);
+  };
+
   useEffect(() => {
     fetchCartItems();
   }, [fetchCartItems]);
@@ -40,23 +47,26 @@ export default function ProductInfo({
 
   const handleCartBtn = async () => {
       const cartProduct = await getCartProductAPI();
+      
       let cartNameFound = false;
       if (cartProduct.length > 0) {
-        cartProduct.map((product: any) => {
-          const id = product.id;
-          const productInfo = product.properties;
+        
+        for (const product of cartProduct) {
+          const productType = product as { id: string; properties: any };
+          const id = productType.id;
+          const productInfo = productType.properties;
           const cartName = productInfo.name.title[0].plain_text;
           const cartCount = productInfo.count.number;
           if (cartName === name) {
-            updateCartItem(id,cartName, cartCount + 1);
+            await updateCartItem(id, cartCount + amount);
             cartNameFound = true;
           }
-        })
+        }
         if (!cartNameFound) {
-          await addCartItem(name, 1, price);
+          await addCartItem(name, amount, price, brand, size);
         }
       } else {
-        await addCartItem(name, 1, price);
+        await addCartItem(name, amount, price, brand, size);
       }
       router.push(`/cart`);
     };
@@ -94,6 +104,7 @@ export default function ProductInfo({
             100,000원 미만 결제 시 배송비 3,000원
           </dd>
         </dl>
+        <Amount value={amount} onAmountChange={handleAmountChange} />
         <div className='mt-[20px] flex w-full gap-[20px]'>
           <Button text='장바구니 담기' type='outline' onClick={handleCartBtn} />
           <Button text='바로 구매하기' />

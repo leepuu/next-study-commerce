@@ -1,35 +1,45 @@
 'use client';
 
+import useCartStore from '@/app/_store/store';
 import { useState } from 'react';
 import { IoMdAdd, IoMdRemove } from 'react-icons/io';
 
 interface AmountProps {
   value: number;
-  onAmountChange: (newAmount: number) => void;
+  id?: string;
+  name?: string;
+  isCart?: boolean;
+  onAmountChange?: (newAmount: number) => void;
 }
 
-export default function Amount({ value, onAmountChange }: AmountProps) {
+export default function Amount({ value, id, isCart, onAmountChange }: AmountProps) {
+  const updateCartItem = useCartStore((state) => state.updateCartItem)
   const [amount, setAmount] = useState(value);
 
-  const increaseAmount = () => {
-    const newAmount = amount + 1;
+  const updateAmount = (newAmount: number) => {
     setAmount(newAmount);
-    onAmountChange(newAmount);
+    if (isCart && id) {
+      updateCartItem(id, newAmount);
+    }
+    if (onAmountChange) {
+      onAmountChange(newAmount);
+    }
+  };
+
+  const increaseAmount = () => {
+    updateAmount(amount + 1);
   };
 
   const decreaseAmount = () => {
     if (amount > 1) {
-      const newAmount = amount - 1;
-      setAmount(newAmount);
-      onAmountChange(newAmount);
+      updateAmount(amount - 1);
     }
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newAmount = parseInt(event.target.value);
     if (newAmount >= 1) {
-      setAmount(newAmount);
-      onAmountChange(newAmount);
+      updateAmount(newAmount);
     }
   };
   return (

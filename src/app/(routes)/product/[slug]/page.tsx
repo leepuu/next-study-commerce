@@ -14,7 +14,6 @@ async function getProjects({ slug }: { slug: string }): Promise<any> {
 export default async function Product({ params }: { params: PageParams }) {
   const { cover, properties, id } = await getProjects(params);
   const { name, brand, price, size } = properties;
-
   return (
     <div className='m-auto w-full max-w-[1000px]'>
       <ProductInfo

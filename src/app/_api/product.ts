@@ -23,16 +23,6 @@ export const getProductPageAPI = async (id: string) => {
   return response;
 };
 
-// export const getProductSearchAPI = async (value: string) => {
-//   const response = await notion.search({
-//     query: value,
-//     filter: {
-//       value: 'page',
-//       property: 'object'
-//     }
-//   });
-//   return response.results;
-// };
 
 export const getProductSearchAPI = async (value: string) => {
   const response = await notion.databases.query({
@@ -40,10 +30,10 @@ export const getProductSearchAPI = async (value: string) => {
     filter: {
       or: [
         {
-            property: "name",
-                title: {
-                    contains: value
-                }
+          property: "name",
+            title: {
+              contains: value
+            }
         }   
     ]
     }
@@ -53,7 +43,13 @@ export const getProductSearchAPI = async (value: string) => {
 
 export const getCartProductAPI = async () => {
   const response = await notion.databases.query({
-    database_id: cart_database_id
+    database_id: cart_database_id,
+    sorts: [
+      {
+        property: 'name',
+        direction: 'ascending',
+      },
+    ],
   });
 
   return response.results;
@@ -76,8 +72,16 @@ export const addCartProductPageAPI = async (items: ProductItem) => {
         ]
       },
       price: { number: items.price },
-      count: { number: items.count }
-    }
+      count: { number: items.count },
+      brand:{
+        select: {
+          name: items.brand,
+        }
+      },
+      size: { number: items.size },
+      
+    },
+    
   });
   return response;
 };

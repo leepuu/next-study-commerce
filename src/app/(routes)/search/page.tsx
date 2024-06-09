@@ -8,7 +8,7 @@ export default async function Search({
   searchParams: { [key: string]: string };
 }) {
   const products = await getProductSearchAPI(searchParams.query);
-
+console.log(searchParams)
   return (
     <div>
       {products.length > 0 ? (
