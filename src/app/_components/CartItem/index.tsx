@@ -11,7 +11,6 @@ export default function CartItem({ name, price, count, id, brand, size }: Produc
   return (
     <div className='flex relative'>
       <div className='w-[100px] h-[100px] rounded-lg overflow-hidden bg-[#F6F6F6] mr-[20px]'>
-        
       </div>
       <div className='flex flex-col flex-1'>
         <div className='flex flex-col flex-1'>
